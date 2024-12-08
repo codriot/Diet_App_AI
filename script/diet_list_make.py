@@ -50,9 +50,9 @@ def create_diet_list(calorie_limit):
     return pd.DataFrame(diet_list)
 
 # Örnek diyet listesi oluşturma
-calorie_limit = 20
+calorie_limit = 2000
 diet_list = create_diet_list(calorie_limit)
 print(diet_list)
 
 # Diyet listesini CSV dosyasına kaydetme
-diet_list.to_csv('./Data/processed_data/diet_list1.csv', index=False)
+diet_list.to_csv('./Data/processed_data/diet_list3.csv', index=False)
