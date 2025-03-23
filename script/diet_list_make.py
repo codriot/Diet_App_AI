@@ -49,10 +49,47 @@ def create_diet_list(calorie_limit):
                 total_calories += recipe['Calories']
     return pd.DataFrame(diet_list)
 
+
+
+
+
+# Öneri fonksiyonunu güncelleme: sadece "Turkish" anahtar kelimesine sahip tarifleri önerir
+def recommend_recipes_turkish(recipe_index, n_recommendations=5):
+    distances, indices = knn.kneighbors([X_scaled[recipe_index]])
+    recommendations = data.iloc[indices[0]]
+    turkish_recipes = recommendations[recommendations['Keywords'].str.contains('Turkish', na=False)]
+    return turkish_recipes.head(n_recommendations)
+
+# Diyet listesi oluşturma fonksiyonunu güncelleme
+def create_diet_list_turkish(calorie_limit):
+    diet_list = []
+    total_calories = 0
+    for i in range(len(data)):
+        if total_calories >= calorie_limit:
+            break
+        recommendations = recommend_recipes_turkish(i)
+        for _, recipe in recommendations.iterrows():
+            if total_calories + recipe['Calories'] <= calorie_limit:
+                diet_list.append(recipe)
+                total_calories += recipe['Calories']
+    return pd.DataFrame(diet_list)
+
 # Örnek diyet listesi oluşturma
-calorie_limit = 2000
-diet_list = create_diet_list(calorie_limit)
-print(diet_list)
+calorie_limit = 45000
+diet_list_turkish = create_diet_list_turkish(calorie_limit)
+print(diet_list_turkish)
 
 # Diyet listesini CSV dosyasına kaydetme
-diet_list.to_csv('./Data/processed_data/diet_list3.csv', index=False)
+diet_list_turkish.to_csv('./Data/processed_data/diet_list_turkish2.csv', index=False)
+
+
+# # Örnek diyet listesi oluşturma
+# calorie_limit = 2000
+# diet_list = create_diet_list(calorie_limit)
+# print(diet_list)
+
+# # Diyet listesini CSV dosyasına kaydetme
+# diet_list.to_csv('./Data/processed_data/diet_list5.csv', index=False)
+
+
+
